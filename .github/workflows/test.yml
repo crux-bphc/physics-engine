@@ -1,0 +1,28 @@
+
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: rikorose/gcc-cmake:gcc-10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Raylib Dependencies
+        run: |
+          apt-get update
+          apt-get install -y libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+
+      - name: Check Generation of Build FIles
+        run: cmake -B build
+
+      - name: Check Compilation of Build Files
+        run: cmake --build build
