@@ -11,8 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: rikorose/gcc-cmake:gcc-10
     steps:
       - uses: actions/checkout@v5
 
