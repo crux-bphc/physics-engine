@@ -1,5 +1,6 @@
 #include <iostream>
 #include "eqn-solver.hpp"
+
 namespace euler {
 	
 double EqnSolver::solve(){
