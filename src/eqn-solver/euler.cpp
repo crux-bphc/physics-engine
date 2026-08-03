@@ -1,5 +1,5 @@
 #include <iostream>
-#include "eqn-solver.hpp"
+#include "eqn-solver/eqn-solver.hpp"
 
 namespace euler {
 	
