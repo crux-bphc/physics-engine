@@ -1,19 +1,20 @@
 #include <iostream>
-#include "eqn-solver/eqn-solver.hpp"
+#include <eqn-solver/eqn-solver.hpp>
 
 namespace euler {
 	
-double EqnSolver::solve(){
+double EulerSolver::solve(){
 	    
     while(xn < x){
 	xn += h;
 	yn += h * func(xn, yn);
     }
 
-    return yn;
+   return yn;
 }
+}
+	
 
-}
 
 	
 
