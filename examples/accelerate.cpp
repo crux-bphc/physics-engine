@@ -18,7 +18,7 @@ int main(){
     while(!WindowShouldClose()){
 	BeginDrawing();
 	ClearBackground(YELLOW);
-	euler::EulerSolver oiler(t, ballPos.x, t+GetFrameTime(), 0.01, funcy);
+	euler::EulerSolver oiler(GetTime(), ballPos.x, GetTime()+GetFrameTime(), 0.01, funcy);
 	ballPos.x = oiler.solve();
 	DrawCircleV(ballPos, 50, BLACK);
 	EndDrawing();

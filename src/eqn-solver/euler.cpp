@@ -1,5 +1,6 @@
 #include <iostream>
 #include <eqn-solver/eqn-solver.hpp>
+#include <cmath>
 
 namespace euler {
 	
