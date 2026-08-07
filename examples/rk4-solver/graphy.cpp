@@ -4,7 +4,7 @@
 #include <cmath>
 #include <solvers/rk_solver.hpp>
 
-double funcy(double t, double x){
+float funcy(float t, float x){
     return 100 * std::cos(t);
 }
 
@@ -14,7 +14,7 @@ int main(){
     const int screenHeight = 900;
     InitWindow(screenWidth, screenHeight, "winder");
     SetTargetFPS(60);
-    Vector2 ballPos = {(double)screenWidth/2, (double)screenHeight/2};
+    Vector2 ballPos = {(float)screenWidth/2, (float)screenHeight/2};
 
     RenderTexture2D canvas = LoadRenderTexture(1200, 900); //this is for persistence
 

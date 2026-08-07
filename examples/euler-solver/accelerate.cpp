@@ -3,7 +3,7 @@
 #include <solvers/rk_solver.hpp>
 #include "raylib.h"
 
-double funcy(double t, double x){
+float funcy(float t, float x){
     return 5 * t;
 }
 
@@ -12,8 +12,8 @@ int main(){
     const int screenHeight = 900;
     InitWindow(screenWidth, screenHeight, "winder");
     SetTargetFPS(60);
-    double t = GetTime();
-    Vector2 ballPos = {10, (double)screenHeight/2};
+    float t = GetTime();
+    Vector2 ballPos = {10, (float)screenHeight/2};
 
     while(!WindowShouldClose()){
 	BeginDrawing();

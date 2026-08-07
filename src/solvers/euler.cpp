@@ -5,7 +5,7 @@
 namespace solvers {
 namespace euler {
 	
-double EulerSolver::solve(){
+float EulerSolver::solve(){
     while(xn < x){
 	yn += h * func(xn, yn);
 	xn += h;
