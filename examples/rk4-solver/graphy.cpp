@@ -2,7 +2,7 @@
 #include <string>
 #include "raylib.h"
 #include <cmath>
-#include <solvers/rksolver.hpp>
+#include <solvers/rk_solver.hpp>
 
 double funcy(double t, double x){
     return 100 * std::cos(t);
@@ -23,7 +23,7 @@ int main(){
     EndTextureMode();
 
     while(!WindowShouldClose()){
-	solver::rk4::RK4Solver rk4er(0, (float)screenWidth/2, GetTime(), 0.01, funcy); 
+	solvers::rk4::RK4Solver rk4er(0, (float)screenWidth/2, GetTime(), 0.01, funcy); 
 	ballPos.x = rk4er.solve();
 
 	BeginTextureMode(canvas); 

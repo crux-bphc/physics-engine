@@ -1,7 +1,7 @@
 #include <iostream>
-#include <solvers/rksolver.hpp>
+#include <solvers/rk_solver.hpp>
 
-namespace solver {
+namespace solvers {
 namespace rk4{
 	
 double RK4Solver::solve(){

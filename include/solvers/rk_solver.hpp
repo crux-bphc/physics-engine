@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 
-namespace solver {
+namespace solvers {
 using Function = std::function<double(double, double)>;
 class Solver {
     public:

@@ -1,8 +1,8 @@
 #include <iostream>
-#include <solvers/rksolver.hpp> 
+#include <solvers/rk_solver.hpp> 
 
 
-namespace solver {
+namespace solvers {
 namespace euler {
 	
 double EulerSolver::solve(){

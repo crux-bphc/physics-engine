@@ -4,7 +4,7 @@
 
 
 #define WINDOW_TITLE "Window title"
-constexpr cpe::Vector2<int> SCREEN_SIZE{800, 450};
+constexpr math::Vector2<int> SCREEN_SIZE{800, 450};
 
 int main(void)
 {

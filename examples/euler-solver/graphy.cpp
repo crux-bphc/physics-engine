@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <solvers/rksolver.hpp>
+#include <solvers/rk_solver.hpp>
 #include "raylib.h"
 #include <cmath>
 
@@ -23,7 +23,7 @@ int main(){
     EndTextureMode();
 
     while(!WindowShouldClose()){
-	solver::euler::EulerSolver oiler(0, (float)screenWidth/2, GetTime(), 0.01, funcy); 
+	solvers::euler::EulerSolver oiler(0, (float)screenWidth/2, GetTime(), 0.01, funcy); 
 	ballPos.x = oiler.solve();
 
 	BeginTextureMode(canvas); 
