@@ -23,7 +23,7 @@ int main(){
     EndTextureMode();
 
     while(!WindowShouldClose()){
-	euler::EulerSolver oiler(0, (float)screenWidth/2, GetTime(), 0.01, funcy); 
+	solver::euler::EulerSolver oiler(0, (float)screenWidth/2, GetTime(), 0.01, funcy); 
 	ballPos.x = oiler.solve();
 
 	BeginTextureMode(canvas); 

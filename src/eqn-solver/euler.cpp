@@ -1,6 +1,8 @@
 #include <iostream>
 #include <eqn-solver/eqn-solver.hpp>
 
+
+namespace solver {
 namespace euler {
 	
 double EulerSolver::solve(){
@@ -12,7 +14,7 @@ double EulerSolver::solve(){
    return yn;
 }
 }
-	
+}	
 
 
 	

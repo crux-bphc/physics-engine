@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 
+namespace solver {
 using Function = std::function<double(double, double)>;
 class Solver {
     public:
@@ -28,5 +29,6 @@ class RK4Solver : public Solver {
 	double solve() override;
 
 };
+}
 }
 

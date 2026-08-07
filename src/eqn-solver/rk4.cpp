@@ -1,6 +1,7 @@
 #include <iostream>
 #include <eqn-solver/eqn-solver.hpp>
 
+namespace solver {
 namespace rk4{
 	
 double RK4Solver::solve(){
@@ -14,5 +15,6 @@ double RK4Solver::solve(){
     }
 
    return yn;
+}
 }
 }

@@ -23,7 +23,7 @@ int main(){
     EndTextureMode();
 
     while(!WindowShouldClose()){
-	rk4::RK4Solver rk4er(0, (float)screenWidth/2, GetTime(), 0.01, funcy); 
+	solver::rk4::RK4Solver rk4er(0, (float)screenWidth/2, GetTime(), 0.01, funcy); 
 	ballPos.x = rk4er.solve();
 
 	BeginTextureMode(canvas); 
