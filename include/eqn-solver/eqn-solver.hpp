@@ -21,3 +21,12 @@ class EulerSolver : public Solver {
 };
 }
 
+namespace rk4 {
+class RK4Solver : public Solver {
+    public:
+	using Solver::Solver;	
+	double solve() override;
+
+};
+}
+
