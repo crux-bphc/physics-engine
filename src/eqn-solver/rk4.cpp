@@ -1,5 +1,5 @@
 #include <iostream>
-#include <eqn-solver/eqn-solver.hpp>
+#include <solvers/rksolver.hpp>
 
 namespace solver {
 namespace rk4{

@@ -12,7 +12,7 @@ class Solver {
 
 };
 
-namespace euler {
+namespace euler { //basically rk2
 class EulerSolver : public Solver {
     public:
 	using Solver::Solver;	

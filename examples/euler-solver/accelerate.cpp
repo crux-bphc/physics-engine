@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "eqn-solver/eqn-solver.hpp"
+#include <solvers/rksolver.hpp>
 #include "raylib.h"
 
 double funcy(double t, double x){

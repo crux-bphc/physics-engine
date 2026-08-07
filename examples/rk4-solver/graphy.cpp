@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
-#include "eqn-solver/eqn-solver.hpp"
 #include "raylib.h"
 #include <cmath>
+#include <solvers/rksolver.hpp>
 
 double funcy(double t, double x){
     return 100 * std::cos(t);
