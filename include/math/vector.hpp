@@ -1,6 +1,6 @@
 #pragma once
 
-namespace cpe{
+namespace math {
     template <typename T>
     struct Vector2 {
         T x;
