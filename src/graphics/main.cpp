@@ -1,6 +1,7 @@
 #include <raylib.h>
 
-#include "math/vec.hpp"
+#include "math/vector.hpp"
+#include "math/matrix.hpp"
 
 
 #define WINDOW_TITLE "Window title"
