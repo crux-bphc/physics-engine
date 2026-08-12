@@ -3,10 +3,6 @@
 #include <solvers/rk_solver.hpp>
 #include "raylib.h"
 
-float funcy(float t, float x){
-    return 5 * t;
-}
-
 int main(){
     const int screenWidth = 1200;
     const int screenHeight = 900;
