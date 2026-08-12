@@ -1,32 +1,22 @@
 #include <iostream>
 #include <string>
 #include <cuda_runtime.h>
-#include <solvers/rk_solver.hpp>
+#include <solvers/rk_solver_cuda.cuh>
 #include "raylib.h"
 #include <cmath>
 #include <cstdlib>
+
 __device__ float func(float t, float x){
     return  10 * std::cos(5 * t);
 }
 
-__device__ float rk4solve(float xn, float yn, float x, float h){ //separate cuda implementation should be written for this
-    while(xn < x){
-	float k1 = func(xn, yn);
-	float k2 = func(xn + (h/2), (yn + ((h/2) * k1)));
-	float k3 = func(xn + (h/2), (yn + ((h/2) * k2)));
-	float k4 = func(xn + h, yn + (h * k3));
-	yn += ((h/6)*(k1 + (2*k2) + (2*k3) + k4));
-	xn += h;
-    }
-
-   return yn;
-}
 
 __global__
-void rkSolveKernel(float* Pos, float* PosNew, int n, double t){
+void rkSolveKernel(float* Pos, float* PosNew, int n, double t){ //creates a separate thread for solving the position of every particle
     int i = (blockIdx.x * blockDim.x) + threadIdx.x;
     if (i < n) {
-	PosNew[i] =  rk4solve(0, Pos[i], t, 0.01);
+	cuda_solvers::rk4::RK4Solver oiler(t, Pos[i], t+0.001, 0.01, func);//0.001 added to time is arbitrary, it should be the delta t instead 
+	PosNew[i] =  oiler.solve();
     }
 }
 
@@ -38,7 +28,7 @@ void rkSolve(float* ballPos, float* ballPosNext, int n){
     cudaMemcpy(d_ballPos, ballPos, n * sizeof(float), cudaMemcpyHostToDevice);
 
     cudaMalloc((void**)&d_ballPosNext, size);
-    rkSolveKernel<<<ceil(n/256.0),256>>>(d_ballPos, d_ballPosNext, n, GetTime());
+    rkSolveKernel<<<ceil(n/256.0),256>>>(d_ballPos, d_ballPosNext, n, GetTime()); //calling the kernel
     cudaMemcpy(ballPosNext, d_ballPosNext, n * sizeof(float), cudaMemcpyDeviceToHost);
     
     cudaFree(d_ballPos);
@@ -56,7 +46,7 @@ int main(){
     float* ballPosNew = new float[n];
     float* ballPosY = new float[n];
     for(int i = 0; i < n; i++){
-	ballPos[i] = (float)(screenWidth/2) + rand()%200;
+	ballPos[i] = (float)(screenWidth/2) + rand()%200; //its just the X position, shitty naming mb
 	ballPosY[i] = (float)(screenHeight/2) + rand()%200;
 	ballPosNew[i] = 0;
     }
@@ -67,7 +57,7 @@ int main(){
 	for(int i = 0; i < n; i++){
 	    DrawCircleV({ballPosNew[i], ballPosY[i]}, 10, BLACK); 
 	}
-	std::swap(ballPos, ballPosNew);
+	std::swap(ballPos, ballPosNew); 
 	EndDrawing();
 
     }
