@@ -65,7 +65,7 @@ int main(){
 	ClearBackground(YELLOW);
 	rkSolve(ballPos, ballPosNew,  n);
 	for(int i = 0; i < n; i++){
-	    DrawCircleV({ballPos[i], ballPosY[i]}, 10, BLACK); 
+	    DrawCircleV({ballPosNew[i], ballPosY[i]}, 10, BLACK); 
 	}
 	std::swap(ballPos, ballPosNew);
 	EndDrawing();
