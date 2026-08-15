@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 __device__ float func(float t, float x){
-    return  100 * std::cos(5 * t);
+    return  x * 2 * std::cos(5 * x * t);
 }
 
 
@@ -28,7 +28,7 @@ void rkSolve(float* ballPos, float* ballPosNext, int n){
     cudaMemcpy(d_ballPos, ballPos, n * sizeof(float), cudaMemcpyHostToDevice);
 
     cudaMalloc((void**)&d_ballPosNext, size);
-    rkSolveKernel<<<ceil(n/256.0),256>>>(d_ballPos, d_ballPosNext, n, GetTime()); //calling the kernel
+    rkSolveKernel<<<ceil(n/256.0),256>>>(d_ballPos, d_ballPosNext, n, GetTime()); //(num of blocks, num of threads) both are 1D
     cudaMemcpy(ballPosNext, d_ballPosNext, n * sizeof(float), cudaMemcpyDeviceToHost);
     
     cudaFree(d_ballPos);
@@ -40,14 +40,14 @@ int main(){
     const int screenHeight = 900;
     InitWindow(screenWidth, screenHeight, "winder");
     SetTargetFPS(60);
-    int n = 100; //num of particles
+    int n = 1000; //num of particles
     float t = GetTime();
     float* ballPosX = new float[n];
     float* ballPosXNew = new float[n];
     float* ballPosY = new float[n];
     for(int i = 0; i < n; i++){
-	ballPosX[i] = (float)(screenWidth/2) + rand()%200; 
-	ballPosY[i] = (float)(screenHeight/2) + rand()%200;
+	ballPosX[i] = (float)(screenWidth/2) + (rand()%1000- (float)(screenWidth/2)); 
+	ballPosY[i] = (float)(screenHeight/2) + (rand()%1000 - (float)(screenHeight/2));
 	ballPosXNew[i] = 0;
     }
     while(!WindowShouldClose()){
