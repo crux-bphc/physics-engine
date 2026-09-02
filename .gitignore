@@ -6,3 +6,6 @@ bin/
 build/
 out/
 CMakeSettings.json
+.git/
+.github/
+.gitignore

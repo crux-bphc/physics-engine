@@ -1,40 +1,52 @@
-cmake_minimum_required(VERSION 3.20)
-project(physics_engine CXX)
+cmake_minimum_required(VERSION 3.30)
 
-set(CMAKE_CXX_STANDARD 17)
+# CMake settings
+set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS ON CACHE INTERNAL "")
+
+project(physics-engine CXX)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# C++26
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Adding Raylib
-include(FetchContent)
-set(FETCHCONTENT_QUIET FALSE)
-set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # don't build the supplied examples
-set(BUILD_GAMES    OFF CACHE BOOL "" FORCE) # don't build the supplied example games
+# Flags (TODO: a release preset with O3, etc)
+add_compile_options(-stdlib=libc++ -pthread -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -O1)
+add_link_options(-stdlib=libc++ -pthread -lm)
+add_compile_definitions(_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG)
 
-if(UNIX AND NOT APPLE)
-    set(GLFW_BUILD_WAYLAND ON CACHE BOOL "" FORCE)
-    set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
-endif()
+# Sources
+file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
+file(GLOB_RECURSE CPPM_SOURCES "src/*.cppm")
 
-FetchContent_Declare(
-    raylib
-    GIT_REPOSITORY "https://github.com/raysan5/raylib.git"
-    GIT_TAG "master"
-    GIT_PROGRESS TRUE
+# std directory
+set(LIBCXX_MODULE_DIR "/usr/share/libc++/v1")
+set(LIBCXX_MODULE_PATH "${LIBCXX_MODULE_DIR}/std.cppm")
+
+add_library(std_module)
+target_sources(std_module
+    PUBLIC
+    FILE_SET CXX_MODULES TYPE CXX_MODULES
+    BASE_DIRS ${LIBCXX_MODULE_DIR}
+    FILES ${LIBCXX_MODULE_PATH}
 )
 
-FetchContent_MakeAvailable(raylib)
+target_compile_options(std_module PRIVATE 
+    -Wno-reserved-module-identifier 
+    -Wno-reserved-identifier
+)
 
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
-set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/include/")
+# Executable
+add_executable(physics-engine ${CPP_SOURCES})
 
-add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE})
-target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+# Enable modules
+if(CPPM_SOURCES)
+target_sources(physics-engine
+  PUBLIC
+        FILE_SET CXX_MODULES TYPE CXX_MODULES
+        FILES ${CPPM_SOURCES}
+      )
+endif()
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/") 
 
-### Set the asset path macro in release mode to a relative path that assumes 
-### the assets folder is in the same directory as the game executable
-
-#target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="./assets") 
