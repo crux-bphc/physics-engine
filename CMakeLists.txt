@@ -11,11 +11,6 @@ set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Flags (TODO: a release preset with O3, etc)
-add_compile_options(-stdlib=libc++ -pthread -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -O1)
-add_link_options(-stdlib=libc++ -pthread -lm)
-add_compile_definitions(_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG)
-
 # Sources
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
 file(GLOB_RECURSE CPPM_SOURCES "src/*.cppm")
@@ -39,6 +34,7 @@ target_compile_options(std_module PRIVATE
 
 # Executable
 add_executable(physics-engine ${CPP_SOURCES})
+target_link_libraries(physics-engine PRIVATE std_module)
 
 # Enable modules
 if(CPPM_SOURCES)

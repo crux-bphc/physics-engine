@@ -2,30 +2,41 @@
   "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 28,
+    "minor": 30,
     "patch": 0
   },
   "configurePresets": [
     {
-      "name": "debug",
+      "name": "base",
+      "hidden": true,
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "clang++",
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_CXX_FLAGS": "-stdlib=libc++ -pthread -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -m64",
+        "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++ -pthread -lm",
+        "CMAKE_SHARED_LINKER_FLAGS": "-stdlib=libc++ -pthread -lm",
+        "CMAKE_MODULE_LINKER_FLAGS": "-stdlib=libc++ -pthread -lm"
+      }
+    },
+    {
+      "name": "debug",
+      "inherits": "base",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS_DEBUG": "-g -O1 -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG"
       }
     },
     {
       "name": "release",
-      "generator": "Ninja",
+      "inherits": "base",
       "binaryDir": "${sourceDir}/build-release",
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "clang++",
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_CXX_FLAGS": "-O3 -flto -fstruct-layout=7 -fvirtual-function-elimination -fvisibility=hidden -m64",
-        "CMAKE_EXE_LINKER_FLAGS": "-flto",
-        "CMAKE_SHARED_LINKER_FLAGS": "-flto",
-        "CMAKE_MODULE_LINKER_FLAGS": "-flto"
+        "CMAKE_CXX_FLAGS_RELEASE": "-O3 -flto -fvirtual-function-elimination -fvisibility=hidden -fno-exceptions -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_NONE",
+        "CMAKE_EXE_LINKER_FLAGS_RELEASE": "-flto",
+        "CMAKE_SHARED_LINKER_FLAGS_RELEASE": "-flto",
+        "CMAKE_MODULE_LINKER_FLAGS_RELEASE": "-flto"
       }
     }
   ],
