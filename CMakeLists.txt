@@ -25,22 +25,46 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
-    rlImgui 
-    GIT_REPOSITORY "https://github.com/raylib-extras/rlImgui.git"
+    imgui
+    GIT_REPOSITORY "https://github.com/ocornut/imgui.git"
+    GIT_TAG "docking"
+    GIT_PROGRESS TRUE
+)
+
+FetchContent_Declare(
+    rlImGui
+    GIT_REPOSITORY "https://github.com/raylib-extras/rlImGui.git"
     GIT_TAG "main"
     GIT_PROGRESS TRUE
 )
 
-FetchContent_MakeAvailable(raylib rlImgui)
+FetchContent_MakeAvailable(raylib imgui rlImGui)
 
 # core library setup
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
 set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/include/")
 
-add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_INCLUDE})
-target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
-target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+add_library(${PROJECT_NAME}_lib STATIC 
+    ${PROJECT_SOURCES}
+    ${imgui_SOURCE_DIR}/imgui.cpp
+    ${imgui_SOURCE_DIR}/imgui_draw.cpp
+    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+    ${imgui_SOURCE_DIR}/imgui_tables.cpp
+    ${imgui_SOURCE_DIR}/imgui_demo.cpp
+    ${rlimgui_SOURCE_DIR}/rlImGui.cpp
+)
+
+target_include_directories(${PROJECT_NAME}_lib PUBLIC 
+    ${PROJECT_INCLUDE}
+    ${imgui_SOURCE_DIR}
+    ${rlimgui_SOURCE_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME}_lib PUBLIC raylib)
+target_compile_definitions(${PROJECT_NAME}_lib PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+
+add_executable(${PROJECT_NAME} "${CMAKE_CURRENT_LIST_DIR}/src/graphics/main.cpp")
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_lib)
 
 # examples
 add_subdirectory(examples)
