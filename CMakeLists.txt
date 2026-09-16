@@ -22,6 +22,7 @@ FetchContent_Declare(
     GIT_REPOSITORY "https://github.com/raysan5/raylib.git"
     GIT_TAG "master"
     GIT_PROGRESS TRUE
+    GIT_SHALLOW TRUE
 )
 
 FetchContent_Declare(
@@ -29,13 +30,16 @@ FetchContent_Declare(
     GIT_REPOSITORY "https://github.com/ocornut/imgui.git"
     GIT_TAG "docking"
     GIT_PROGRESS TRUE
+    GIT_SHALLOW TRUE
 )
+
 
 FetchContent_Declare(
     rlImGui
     GIT_REPOSITORY "https://github.com/raylib-extras/rlImGui.git"
     GIT_TAG "main"
     GIT_PROGRESS TRUE
+    GIT_SHALLOW TRUE
 )
 
 FetchContent_MakeAvailable(raylib imgui rlImGui)
