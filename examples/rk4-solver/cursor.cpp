@@ -1,72 +1,68 @@
+#include "imgui.h"
+#include "math/vector.hpp"
+#include "physics/rigidbody.hpp"
 #include "raylib.h"
 #include "raymath.h"
 #include "rlImGui.h"
-#include "imgui.h"
 
-class Object {
-  public: 
-    Vector2 position;
-    Vector2 velocity;
-    Vector2 acceleration;
-    float time;
+int main() {
+  const int screenWidth = 1200;
+  const int screenHeight = 900;
+  InitWindow(screenWidth, screenHeight, "winder");
+  SetTargetFPS(60);
 
-    Object(Vector2 pos, Vector2 vel, float t) : position(pos), velocity(vel), time(t), acceleration(Vector2{0, 0}){
-    }
+  rlImGuiSetup(true);
 
-    void calculate(float t) {
-      velocity = velocity + acceleration * (t-time);
-      position = position + velocity * (t-time);
-    }
-};
+  float t = GetTime();
+  RigidBody2 ballObj(math::Vector2<float>{10, (float)screenHeight / 2},
+                     math::Vector2<float>{0, 0}, math::Vector2<float>{0, 0}, t);
 
-int main(){
-    const int screenWidth = 1200;
-    const int screenHeight = 900;
-    InitWindow(screenWidth, screenHeight, "winder");
-    SetTargetFPS(60);
+  RigidBody2 ballObj2(math::Vector2<float>{20, (float)screenHeight / 2},
+                      math::Vector2<float>{0, 0}, math::Vector2<float>{0, 0},
+                      t);
 
-    rlImGuiSetup(true);
+  float ak = 50000.0;
+  float vk = 0.001;
 
-    float t = GetTime();
-    Object ballObj(Vector2{10, (float)screenHeight/2}, Vector2{0, 0}, t);
+  while (!WindowShouldClose()) {
+    BeginDrawing();
+    ClearBackground(YELLOW);
 
-    float ak = 50000.0;
-    float vk = 0.001;
+    rlImGuiBegin();
 
-    while(!WindowShouldClose()){
-      BeginDrawing();
-      ClearBackground(YELLOW);
+    ImGui::GetIO().IniFilename = nullptr;
+    ImGui::Begin("ball");
+    ImGui::Text("xpos: %f", ballObj.position.x);
+    ImGui::Text("xvel: %f", ballObj.velocity.x);
+    ImGui::Text("xaccel: %f", ballObj.acceleration.x);
+    ImGui::End();
 
-      rlImGuiBegin();
+    ImGui::Begin("constants");
+    ImGui::SliderFloat("accel", &ak, 10000.0, 10000000.0);
+    ImGui::SliderFloat("vel", &vk, 0.0, 0.5);
+    ImGui::End();
 
-      ImGui::GetIO().IniFilename = nullptr;
-      ImGui::Begin("ball");
-      ImGui::Text("xpos: %f", ballObj.position.x);
-      ImGui::Text("xvel: %f", ballObj.velocity.x);
-      ImGui::Text("xaccel: %f", ballObj.acceleration.x);
-      ImGui::End();
+    Vector2 mousePos = GetMousePosition();
+    math::Vector2<float> accel =
+        math::Vector2<float>{mousePos.x, mousePos.y} - ballObj.position;
+    // accel = Vector2Normalize(accel);
+    accel /= ak;
+    accel -= vk * ballObj.velocity;
+    ballObj.acceleration = accel;
+    math::Vector2<float> accel2 = ballObj.position - ballObj2.position;
+    accel2 /= ak;
+    accel2 -= vk * ballObj2.velocity;
+    ballObj2.acceleration = accel2;
+    ballObj.time_step(GetTime());
+    ballObj2.time_step(GetTime());
 
-      ImGui::Begin("constants");
-      ImGui::SliderFloat("accel", &ak, 10000.0, 10000000.0);
-      ImGui::SliderFloat("vel", &vk, 0.0, 0.5);
-      ImGui::End();
+    rlImGuiEnd();
 
-      Vector2 accel = GetMousePosition() - ballObj.position;
-      // accel = Vector2Normalize(accel);
-      accel /= ak;
-      accel -= vk*ballObj.velocity;
-      ballObj.acceleration = accel;
+    DrawCircleV(Vector2{ballObj.position.x, ballObj.position.y}, 50, BLACK);
+    DrawCircleV(Vector2{ballObj2.position.x, ballObj2.position.y}, 50, BLACK);
+    EndDrawing();
+  }
+  CloseWindow();
 
-      ballObj.calculate(GetTime());
-
-      rlImGuiEnd();
-
-      DrawCircleV(ballObj.position, 50, BLACK);
-      EndDrawing();
-    }
-    CloseWindow();
-
-    return 0;
-
-
+  return 0;
 }
